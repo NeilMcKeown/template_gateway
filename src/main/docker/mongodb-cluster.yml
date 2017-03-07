@@ -1,0 +1,16 @@
+version: '2'
+services:
+    template_gateway-mongodb:
+        image: mongo:3.2.10
+        ports:
+            - "27017:27017"
+        command: mongos --configdb template_gateway-mongodb-config
+    template_gateway-mongodb-node:
+        build:
+            context: .
+            dockerfile: mongodb/MongoDB.Dockerfile
+        command: mongod --replSet rs1 --noprealloc --smallfiles
+    template_gateway-mongodb-config:
+        image: mongo:3.2.10
+        container_name: template_gateway-mongodb-config
+        command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
